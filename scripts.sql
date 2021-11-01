@@ -160,10 +160,6 @@ END;
 
 
 
--- test complete
-EXEC sp_insert_usuario 2, 'cesar.poac1@gmail.com', '123456', 'cesar', 'apelidos', '4ta calle 1-12', 44792274, 'fasdf3423','.jpeg',1,'company 1','4343434343';
---test whitout phone
-EXEC sp_insert_usuario 2, 'andres.1@gmail.com', '123456', 'cesar', 'apelidos', '4ta calle 1-12', NULL, 'fasdf3423','.jpeg';
 
 --test without email
 EXEC sp_insert_usuario 2, 'andres.2@gmail.com', '123456', 'cesar', 'apelidos', '4ta calle 1-12', NULL, NULL,'.jpeg';

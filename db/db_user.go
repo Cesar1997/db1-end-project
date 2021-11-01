@@ -7,9 +7,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-//"$2a$14$huxsQf3ZN1gYkhKnNNdQw..064CwlMkMTlctciKuj0bfiad7s1M3i"
-// $2a$14$8Jnha3eamzwrVc6PoIwG7eqNodIjzsE3FEppbk/zCEEJhkXzTuGf.
-//$2a$14$8Jnha3eamzwrVc6PoIwG7eqNodIjzsE3FEppbk/zCEE
 func RegisterUser(user structures.User) (err error) {
 
 	password, err := HashPassword(user.Password)
