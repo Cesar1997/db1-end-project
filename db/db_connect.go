@@ -25,5 +25,5 @@ func Close() (err error) {
 		db.Close()
 		return nil
 	}
-	return fmt.Errorf("No se puede cerrar la conexión con la DB porque es nula")
+	return fmt.Errorf("No  se puede cerrar la conexión con la DB porque es nula")
 }
