@@ -35,7 +35,7 @@ func main() {
 	router.HandleFunc("/user/login", loginUserHandler).Methods(http.MethodPost, http.MethodOptions)
 
 	router.HandleFunc("/user/advertisements/create", storeAdvertisementHandler).Methods(http.MethodPost)
-	router.HandleFunc("/product/advertisements", getAdvertisementsHandler).Methods(http.MethodGet)
+	router.HandleFunc("/product/advertisements/advertisements/list/{id}", getAdvertisementsHandler).Methods(http.MethodGet)
 	router.HandleFunc("/product/advertisements/{id}", getAdvertisementHandler).Methods(http.MethodGet)
 	router.HandleFunc("/advertisements/categories", getCategoryHandler).Methods(http.MethodGet)
 
@@ -45,6 +45,8 @@ func main() {
 	router.HandleFunc("/user/product/{productID}", getProduct).Methods(http.MethodGet)
 
 	router.HandleFunc("/purchaseOrder", storePurchaseOrder).Methods(http.MethodPost)
+
+	router.HandleFunc("/purchaseOrder/report/{id}", getReportPurchaseOrder).Methods(http.MethodGet)
 	//Run server in port 8081
 	log.Fatal(http.ListenAndServe(":8081", router))
 }

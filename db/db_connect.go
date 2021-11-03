@@ -11,8 +11,9 @@ var db *sql.DB
 func ConnectToDB() (err error) {
 	envPath := os.Getenv("DATABASE_URL")
 	if len(envPath) == 0 {
-		envPath = "sqlserver://sa:p@55DressMyTrip+@localhost:1435?database=dressMyTrip&encrypt=disable"
+		envPath = "sqlserver://sa:p@55DressMyTrip@localhost:1433?database=master&encrypt=disable"
 	}
+
 	db, err = sql.Open("sqlserver", envPath)
 	if err != nil {
 		return err

@@ -1,15 +1,27 @@
-FROM golang:1.16-alpine
+FROM golang:1.17.1 as builder
 
-WORKDIR /app
+RUN mkdir /build
+WORKDIR /build
 
-COPY go.mod ./
-COPY go.sum ./
-RUN go mod download
+COPY go.mod .
+COPY go.sum .
 
-COPY *.go ./
 
-RUN go build -o /docker-gs-ping
+ADD . .
 
+RUN env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -gcflags=-trimpath=$PWD -o main .
+
+FROM alpine:3.12.0
+
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+
+ENV GOROOT /usr/local/go
+ADD https://github.com/golang/go/raw/master/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
+
+# RUN mkdir -p /app && adduser -S -D -H -h /app appuser && chown -R appuser /app
+COPY --from=builder /build/main /app/
+# COPY --from=builder /build/config.toml  /app/config/
+# USER appuser
 EXPOSE 8081
-
-CMD [ "/docker-gs-ping" ]
+WORKDIR /app
+CMD ["./main"]

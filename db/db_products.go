@@ -47,6 +47,9 @@ func GetAllProductsFilteredByUser(profileID int) (listProducts []structures.Prod
 		if err != nil {
 			return listProducts, err
 		}
+
+		product.Photos, _ = GetPhotosByProductID(product.ID)
+
 		listProducts = append(listProducts, product)
 	}
 	return
@@ -84,8 +87,43 @@ func GetProduct(productID int) (structures.ProductType, error) {
 		if err != nil {
 			return product, err
 		}
+		product.Photos, _ = GetPhotosByProductID(product.ID)
 	}
 	return product, nil
+}
+
+func GetPhotosByProductID(productID int) ([]structures.Photo, error) {
+	listPhotos := make([]structures.Photo, 0)
+	sqlQuery := `
+		SELECT
+			photo.foto ,
+			photo.formato
+		FROM
+			producto_foto prodPhoto
+		INNER JOIN foto photo ON photo.id_foto  = prodPhoto.id_foto 
+		WHERE (photo.foto IS NOT NULL AND photo.foto  <> '') AND 
+			 prodPhoto.id_producto = @IdProducto
+	`
+	rows, err := db.Query(sqlQuery, sql.Named("IdProducto", productID))
+	if err == sql.ErrNoRows {
+		return listPhotos, nil
+	}
+	if err != nil {
+		return listPhotos, err
+	}
+	for rows.Next() {
+		var photo structures.Photo
+		err = rows.Scan(
+			&photo.Photo,
+			&photo.Extension,
+		)
+		if err != nil {
+			return listPhotos, err
+		}
+
+		listPhotos = append(listPhotos, photo)
+	}
+	return listPhotos, nil
 }
 
 func GetAllSizes() (sizes []structures.Size, err error) {
@@ -183,7 +221,8 @@ func CreateProduct(product structures.ProductType) (err error) {
 			@NombreArticulo,
 			@Descripcion,
 			@PrecioPorHora,
-			@IdTipoArticulo
+			@IdTipoArticulo,
+			@Foto
 	`
 	_, err = db.Exec(
 		sqlQuery,
@@ -194,6 +233,7 @@ func CreateProduct(product structures.ProductType) (err error) {
 		sql.Named("Descripcion", product.Description),
 		sql.Named("PrecioPorHora", product.PriceXHour),
 		sql.Named("IdTipoArticulo", product.TypeArticleID),
+		sql.Named("Foto", product.ImageURL),
 	)
 	if err != nil {
 		return err

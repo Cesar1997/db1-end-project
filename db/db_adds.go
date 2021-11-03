@@ -6,7 +6,7 @@ import (
 	"github.com/Cesar1997/db1-end-project/structures"
 )
 
-func GetAllAdds() (listAdds []structures.Adds, err error) {
+func GetAllAdds(profileID int) (listAdds []structures.Adds, err error) {
 
 	sqlQuery := `
 		SELECT
@@ -26,9 +26,10 @@ func GetAllAdds() (listAdds []structures.Adds, err error) {
 		INNER JOIN articulo ar ON ar.id_articulo  = prod.id_articulo
 		INNER JOIN color col ON col.id_color  = prod.id_color
 		INNER JOIN tamanio tam ON tam.id_tamanio  = prod.id_tamanio
+		WHERE anun.id_perfil_arrendador <> @IdPerfilArrendador
 	`
 
-	rows, err := db.Query(sqlQuery)
+	rows, err := db.Query(sqlQuery, sql.Named("IdPerfilArrendador", profileID))
 
 	if err == sql.ErrNoRows {
 		return listAdds, nil
@@ -54,6 +55,13 @@ func GetAllAdds() (listAdds []structures.Adds, err error) {
 		if err != nil {
 			return listAdds, err
 		}
+
+		photos, err := GetPhotosByProductID(add.Product.ID)
+		if err != nil {
+			return listAdds, err
+		}
+		add.Photos = photos
+
 		listAdds = append(listAdds, add)
 	}
 	return
@@ -109,6 +117,12 @@ func GetAdd(addID int) (structures.Adds, error) {
 		if err != nil {
 			return structures.Adds{}, err
 		}
+
+		photos, err := GetPhotosByProductID(add.Product.ID)
+		if err != nil {
+			return structures.Adds{}, err
+		}
+		add.Photos = photos
 	}
 	return add, nil
 }
@@ -151,15 +165,14 @@ func CreateAdd(add structures.Adds) error {
 					titulo,
 					descripcion
 				)
-		OUTPUT
-			INSERTED.id_anuncio
 		VALUES
 			(
 				@IdPerfilArrendador,
 				@IdProducto,
 				@Titulo,
 				@Descripcion
-			)
+			);
+			SELECT ID = convert(int, SCOPE_IDENTITY())
 	`
 
 	row := db.QueryRow(

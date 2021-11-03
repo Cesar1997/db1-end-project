@@ -1,5 +1,7 @@
 package structures
 
+import "database/sql"
+
 type RESTResponse struct {
 	Result  bool        `json:"result"`
 	Message string      `json:"message"`
@@ -39,8 +41,8 @@ type SellerProfileType struct {
 
 type Photo struct {
 	PhotoID   int
-	Photo     string `json:"photo"`
-	Extension string `json:"extension"`
+	Photo     string         `json:"photo"`
+	Extension sql.NullString `json:"extension"`
 }
 
 type Phone struct {
@@ -69,6 +71,7 @@ type Adds struct {
 	Description string      `json:"description"`
 	Product     ProductType `json:"product"`
 	Categories  []Category  `json:"categories"`
+	Photos      []Photo     `json:"photos"`
 }
 
 type ProductType struct {
@@ -83,6 +86,7 @@ type ProductType struct {
 	ImageURL        string  `json:"imageURL"`
 	ColorInfo       Color   `json:"color"`
 	SizeInfo        Size    `json:"size"`
+	Photos          []Photo `json:"photos"`
 }
 
 type PurchaseOrderType struct {
@@ -103,6 +107,18 @@ type DetailPurchaseOrderType struct {
 	DateTimeToDevolution string  `json:"dateTimeToDevolution"`
 	CantHours            float32 `json:"cantHours"`
 	SubTotal             float32 `json:"subTotal"`
+}
+
+type ReporteVentas struct {
+	IdOrden      int32   `json:"idOrden"`
+	Arrendatario string  `json:"arrendatario"`
+	Articulo     string  `json:"articulo"`
+	Tipo         string  `json:"tipo"`
+	Color        string  `json:"color"`
+	Tamanio      string  `json:"tamanio"`
+	Precio       float32 `json:"precio"`
+	CantHoras    float32 `json:"cantHoras"`
+	Subtotal     float32 `json:"subtotal"`
 }
 
 type TypeArticle struct {
