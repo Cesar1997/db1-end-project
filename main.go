@@ -35,7 +35,7 @@ func main() {
 	router.HandleFunc("/user/login", loginUserHandler).Methods(http.MethodPost, http.MethodOptions)
 
 	router.HandleFunc("/user/advertisements/create", storeAdvertisementHandler).Methods(http.MethodPost)
-	router.HandleFunc("/product/advertisements/advertisements/list/{id}", getAdvertisementsHandler).Methods(http.MethodGet)
+	router.HandleFunc("/product/advertisements/advertisements/list", getAdvertisementsHandler).Methods(http.MethodGet)
 	router.HandleFunc("/product/advertisements/{id}", getAdvertisementHandler).Methods(http.MethodGet)
 	router.HandleFunc("/advertisements/categories", getCategoryHandler).Methods(http.MethodGet)
 

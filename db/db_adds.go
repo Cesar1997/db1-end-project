@@ -6,7 +6,7 @@ import (
 	"github.com/Cesar1997/db1-end-project/structures"
 )
 
-func GetAllAdds(profileID int) (listAdds []structures.Adds, err error) {
+func GetAllAdds() (listAdds []structures.Adds, err error) {
 
 	sqlQuery := `
 		SELECT
@@ -26,10 +26,9 @@ func GetAllAdds(profileID int) (listAdds []structures.Adds, err error) {
 		INNER JOIN articulo ar ON ar.id_articulo  = prod.id_articulo
 		INNER JOIN color col ON col.id_color  = prod.id_color
 		INNER JOIN tamanio tam ON tam.id_tamanio  = prod.id_tamanio
-		WHERE anun.id_perfil_arrendador <> @IdPerfilArrendador
 	`
 
-	rows, err := db.Query(sqlQuery, sql.Named("IdPerfilArrendador", profileID))
+	rows, err := db.Query(sqlQuery)
 
 	if err == sql.ErrNoRows {
 		return listAdds, nil

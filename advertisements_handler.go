@@ -12,9 +12,7 @@ import (
 
 func getAdvertisementsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	vars := mux.Vars(r)
-	id, _ := strconv.Atoi(vars["id"])
-	listAdds, err := db.GetAllAdds(id)
+	listAdds, err := db.GetAllAdds()
 
 	if err != nil {
 		responseWithError(w, r, err)
